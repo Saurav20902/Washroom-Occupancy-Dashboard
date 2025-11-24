@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Washroom Occupancy Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glow { text-shadow: 0 0 20px #00ddff; }
+        .vacant { color: #00ff00; }
+        .occupied { color: #ff0000; }
+    </style>
+</head>
+<body class="bg-black">
+    <div class="flex justify-center items-center h-screen">
+        <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl">
+            <div class="grid grid-cols-5 gap-8 text-cyan-400 text-6xl font-bold">
+                <!-- Female -->
+                <div class="text-center">
+                    <div class="glow">{{ facilities.female.icon }}</div>
+                    <div id="female-count" class="vacant">{{ facilities.female.vacant }}</div>
+                    <div class="text-3xl mt-2 glow" id="female-text">{{ facilities.female.text }}</div>
+                </div>
+                <!-- Male -->
+                <div class="text-center">
+                    <div class="glow">{{ facilities.male.icon }}</div>
+                    <div id="male-count" class="vacant">{{ facilities.male.vacant }}</div>
+                    <div class="text-3xl mt-2 glow" id="male-text">{{ facilities.male.text }}</div>
+                </div>
+                <!-- Family -->
+                <div class="text-center">
+                    <div class="glow">{{ facilities.family.icon }}</div>
+                    <div id="family-count" class="vacant">{{ facilities.family.vacant }}</div>
+                    <div class="text-3xl mt-2 glow" id="family-text">{{ facilities.family.text }}</div>
+                </div>
+                <!-- Disabled -->
+                <div class="text-center">
+                    <div class="glow">{{ facilities.disabled.icon }}</div>
+                    <div id="disabled-count" class="vacant">{{ facilities.disabled.vacant }}</div>
+                    <div class="text-3xl mt-2 glow" id="disabled-text">{{ facilities.disabled.text }}</div>
+                </div>
+                <!-- Prayer -->
+                <div class="text-center">
+                    <div class="glow">{{ facilities.prayer.icon }}</div>
+                    <div id="prayer-count" class="vacant">{{ facilities.prayer.vacant }}</div>
+                    <div class="text-3xl mt-2 glow" id="prayer-text">{{ facilities.prayer.text }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const source = new EventSource("/updates");
+        source.onmessage = function(event) {
+            const data = JSON.parse(event.data.replace(/'/g, '"'));
+            Object.keys(data).forEach(key => {
+                const count = data[key].vacant;
+                const text = data[key].text;
+                document.getElementById(key + "-count").textContent = count;
+                document.getElementById(key + "-text").textContent = text;
+                
+                const countEl = document.getElementById(key + "-count");
+                const textEl = document.getElementById(key + "-text");
+                if (count === 0) {
+                    countEl.className = "occupied";
+                    textEl.className = "text-3xl mt-2 glow occupied";
+                } else {
+                    countEl.className = "vacant";
+                    textEl.className = "text-3xl mt-2 glow";
+                }
+            });
+        };
+    </script>
+</body>
+</html>
