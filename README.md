@@ -21,6 +21,6 @@ Install dependencies: pip install -r fastapi.txt
 Usage
 
 Run the app: python main.py
-Open browser: It auto-opens at http://127.0.0.1:8002 (or manually visit the URL shown in terminal).
+Open browser: It auto-opens at http://127.0.0.1:8005 (or manually visit the URL shown in terminal).
 View the dashboard: Watch live updates every 5 seconds—counters change, colors shift (green for vacant, red for occupied).
 Stop: Press Ctrl+C in terminal.
